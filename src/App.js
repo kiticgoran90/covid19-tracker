@@ -8,8 +8,7 @@ import { Card, CardContent, FormControl, Select, MenuItem } from '@material-ui/c
 import { sortData, prettyPrintStat } from './utils'
 import "leaflet/dist/leaflet.css"
 
-
-function App() {
+const App = () => {
   const [countries, setCountries] = useState([])
   const [country, setCountry] = useState('worldwide')
   const [countryInfo, setCountryInfo] = useState({})
@@ -28,8 +27,8 @@ function App() {
   }, [])
 
   useEffect(() => {
-      const getCountriesData = async () => {
-          await fetch('https://disease.sh/v3/covid-19/countries')
+      const getCountriesData = () => {
+           fetch('https://disease.sh/v3/covid-19/countries')
           .then((response) => response.json())
           .then((data) => {
               const countries = data.map((country) => (
@@ -39,9 +38,9 @@ function App() {
                   }
               ))
               const sortedData = sortData(data)
-              setTableData(sortedData)
-              setMapCountries(data)
               setCountries(countries)
+              setMapCountries(data)
+              setTableData(sortedData)
           })
       }
       getCountriesData()
@@ -57,9 +56,14 @@ function App() {
       .then(data => {
           setCountry(countryCode)
           setCountryInfo(data)
-
-          setMapCenter([data.countryInfo.lat, data.countryInfo.long])
-          setMapZoom(4)
+          if(countryCode === 'worldwide'){
+            setMapCenter({ lat: 34.80746, lng: -40.4796 });
+            setMapZoom(2);
+          }
+          else{
+            setMapCenter([data.countryInfo.lat, data.countryInfo.long]);
+            setMapZoom(4);
+          }
       })
   }
 
@@ -72,8 +76,8 @@ function App() {
                 <Select variant="outlined" value={country} onChange={onCountryChange}>
                     <MenuItem value="worldwide">Worldwide</MenuItem>
                     {
-                        countries.map(country => (
-                            <MenuItem value={country.value}>{country.name}</MenuItem>
+                        countries.map((country, i) => (
+                            <MenuItem key={i} value={country.value}>{country.name}</MenuItem>
                         ))
                     }   
                 </Select>
