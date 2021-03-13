@@ -1,7 +1,7 @@
 .table {
     margin-top: 20px;
     overflow: scroll;
-    height: 400px;
+    height: 850px;
     color: #6a5d5d;
     background-color: white;
 }
@@ -9,6 +9,7 @@
 .table tr {
     display: flex;
     justify-content: space-between;
+    margin-bottom: 5px;
 }
 
 .table td {
